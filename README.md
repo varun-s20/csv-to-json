@@ -24,7 +24,7 @@ An Express project that reads a CSV file, parses records, inserts them into a Po
 
 1. Clone or download the repository and change into the project directory:
 
-`cd path/to/Csv-To-Json`
+`cd path/to/csv-To-json`
 
 2. Install dependencies:
 
