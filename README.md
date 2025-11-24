@@ -12,8 +12,6 @@ An Express project that reads a CSV file, parses records, inserts them into a Po
 - Running the project
 - API endpoints
 - Example request
-- Troubleshooting
-- Notes
 
 ## Requirements
 
@@ -71,14 +69,14 @@ Notes:
 
 ## How it works
 
-- The server entry point is `server.js`. It loads `env.js` (dotenv), initializes Express and connects to the database using `src/config/db.js`.
-- Routes are defined in `routes.js` and the CSV upload/processing endpoint is in `src/routers/user.router.js` which delegates to `src/controllers/user.controller.js`.
+- The server entry point is `server.js`. It loads `env.js`, initializes Express and connects to the database using `src/config/db.js`.
+- Routes are defined in `routes.js` and the CSV upload endpoint is in `src/routers/user.router.js` which delegates to `src/controllers/user.controller.js`.
 - The CSV parsing logic is in `src/utils/csvParse.js` (used by `src/middleware/dataUploader.js`). That middleware reads the CSV, transforms each record into the expected shape, inserts into the `users` table, and returns a list of uploaded records and any errors encountered. It also prints an age-group distribution to the console.
 
 ## Running the project
 
-1. Ensure your PostgreSQL server is running and the database/schema/table exist.
-2. Ensure your `.env` file is present and correct.
+1. Ensure that PostgreSQL server is running and the database/schema/table exist.
+2. Ensure that `.env` file is present and correct.
 3. Install dependencies (if not already done):
 
    `npm install`
@@ -91,14 +89,12 @@ Notes:
 
    `npm start`
 
-You should see output similar to:
+The output should be similar to:
 
 ```
 Connected to the database succesfully
 Server is listening on port 3000
 ```
-
-If you prefer using `nodemon` for development, install it globally or as a dev dependency and run `nodemon server.js`.
 
 ## API endpoints
 
@@ -108,7 +104,7 @@ If you prefer using `nodemon` for development, install it globally or as a dev d
   - Response: JSON message
 
 - POST /api/user/upload-data
-  - Description: Parses the CSV file (from the repo or configured source), inserts rows into the database, and returns uploaded JSON and any errors.
+  - Description: Parses the CSV file, inserts rows into the database, and returns uploaded JSON and any errors.
   - Request body: This project currently reads CSV from a local file via `src/utils/csvParse.js`. Check that file if you want to adapt the endpoint to accept uploads.
 
 Response examples:
@@ -119,14 +115,6 @@ Response examples:
 
 ## Example request
 
-Use curl or Postman to call the upload endpoint. Because the current implementation does not accept file streams via the endpoint, you can simply call the endpoint to trigger CSV processing as implemented by the project:
-
-```
-curl -X POST http://localhost:3000/api/user/upload-data
-```
-
-Replace the host/port if you changed the `PORT` env var.
-
 ### Using Postman
 
 To call the upload endpoint from Postman:
@@ -136,9 +124,3 @@ To call the upload endpoint from Postman:
 3. Set the URL to `http://localhost:3000/api/user/upload-data` (or replace `localhost:3000` with your host/port).
 4. You don't need to attach a file for the current implementation, therefore keep the body empty (the server reads the CSV from disk via `src/utils/csvParse.js`).
 5. Click `Send`. You should get a JSON response with uploaded data or errors.
-
-## Troubleshooting
-
-- "Error connecting to the database": verify your `.env` values and that PostgreSQL is running and reachable from your machine.
-- If the server starts but the CSV processing fails: check `src/utils/csvParse.js` to ensure it points to the correct CSV path and that the CSV is valid.
-- If you see JSON/parse errors, inspect the CSV header names — this project expects nested header names like `name.firstName`, `address.line1`, etc. Adjust headers or parsing logic accordingly.
